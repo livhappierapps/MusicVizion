@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "MusicVizion"
+description = "Music sharing, appreciation, and live analysis with an AI companion. Listen to public tracks, explore audio features and musical influences, and discuss what you hear with Grok."
+version = "1.0.0"
+id = "artifacts/musicvizion"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22018
+
+[services.development]
+run = "pnpm --filter @workspace/musicvizion run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/musicvizion", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/musicvizion/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22018"
+BASE_PATH = "/"

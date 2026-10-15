@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: musicvizion
+    description: MusicVizion companion responses
 paths:
   /healthz:
     get:
@@ -24,6 +26,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /musicvizion/companion:
+    post:
+      operationId: createCompanionReply
+      tags: [musicvizion]
+      summary: Ask the Grok companion about the current listening session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanionInput"
+      responses:
+        "200":
+          description: Companion response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanionReply"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: Grok service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +65,57 @@ components:
           type: string
       required:
         - status
+    CompanionAnalysis:
+      type: object
+      properties:
+        bpm:
+          type: ["number", "null"]
+        energy:
+          type: ["number", "null"]
+        brightness:
+          type: ["number", "null"]
+        pulse:
+          type: ["number", "null"]
+        source:
+          type: string
+      required: [source]
+    CompanionInput:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 160
+        artist:
+          type: string
+          maxLength: 160
+        userMessage:
+          type: string
+          minLength: 1
+          maxLength: 1200
+        positionSeconds:
+          type: number
+          minimum: 0
+        analysis:
+          $ref: "#/components/schemas/CompanionAnalysis"
+        preferences:
+          type: array
+          maxItems: 24
+          items:
+            type: string
+            maxLength: 120
+      required: [title, artist, userMessage, positionSeconds, analysis, preferences]
+    CompanionReply:
+      type: object
+      properties:
+        reply:
+          type: string
+        preferenceSignal:
+          type: ["string", "null"]
+      required: [reply, preferenceSignal]
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
 
