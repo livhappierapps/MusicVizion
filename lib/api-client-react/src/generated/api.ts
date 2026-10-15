@@ -20,7 +20,9 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  ApprovedCompanionInput,
   CompanionInput,
+  CompanionQuote,
   CompanionReply,
   ErrorResponse,
   HealthStatus
@@ -142,7 +144,7 @@ export const getCreateCompanionReplyUrl = () => {
 /**
  * @summary Ask the Grok companion about the current listening session
  */
-export const createCompanionReply = async (companionInput: CompanionInput, options?: Parameters<typeof customFetch>[1]): Promise<CompanionReply> => {
+export const createCompanionReply = async (approvedCompanionInput: ApprovedCompanionInput, options?: Parameters<typeof customFetch>[1]): Promise<CompanionReply> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -163,7 +165,7 @@ return customFetch<CompanionReply>(getCreateCompanionReplyUrl(),
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(companionInput)
+    body: JSON.stringify(approvedCompanionInput)
   }
 );}
 
@@ -201,9 +203,9 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateCompanionReplyMutationResult = NonNullable<Awaited<ReturnType<typeof createCompanionReply>>>
-    export type CreateCompanionReplyMutationBody = BodyType<CompanionInput>
+    export type CreateCompanionReplyMutationBody = BodyType<ApprovedCompanionInput>
     export type CreateCompanionReplyMutationError = ErrorType<ErrorResponse>
-    export type CreateCompanionReplyMutationVariables = {data: BodyType<CompanionInput>}
+    export type CreateCompanionReplyMutationVariables = {data: BodyType<ApprovedCompanionInput>}
 
     /**
  * @summary Ask the Grok companion about the current listening session
@@ -217,5 +219,93 @@ export const useCreateCompanionReply = <TError = ErrorType<ErrorResponse>,
         TContext
       > => {
       return useMutation(getCreateCompanionReplyMutationOptions(options));
+    }
+
+export const getQuoteCompanionRequestUrl = () => {
+
+
+
+
+  return `/api/musicvizion/quote`
+}
+
+/**
+ * @summary Review a request without invoking paid AI
+ */
+export const quoteCompanionRequest = async (companionInput: CompanionInput, options?: Parameters<typeof customFetch>[1]): Promise<CompanionQuote> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<CompanionQuote>(getQuoteCompanionRequestUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(companionInput)
+  }
+);}
+
+
+
+
+
+export const getQuoteCompanionRequestMutationKey = () => ['quoteCompanionRequest'] as const;
+
+export const getQuoteCompanionRequestMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof quoteCompanionRequest>>, TError,QuoteCompanionRequestMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof quoteCompanionRequest>>, TError,QuoteCompanionRequestMutationVariables, TContext> => {
+
+const mutationKey = getQuoteCompanionRequestMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof quoteCompanionRequest>>, QuoteCompanionRequestMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  quoteCompanionRequest(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type QuoteCompanionRequestMutationResult = NonNullable<Awaited<ReturnType<typeof quoteCompanionRequest>>>
+    export type QuoteCompanionRequestMutationBody = BodyType<CompanionInput>
+    export type QuoteCompanionRequestMutationError = ErrorType<unknown>
+    export type QuoteCompanionRequestMutationVariables = {data: BodyType<CompanionInput>}
+
+    /**
+ * @summary Review a request without invoking paid AI
+ */
+export const useQuoteCompanionRequest = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof quoteCompanionRequest>>, TError,QuoteCompanionRequestMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof quoteCompanionRequest>>,
+        TError,
+        QuoteCompanionRequestMutationVariables,
+        TContext
+      > => {
+      return useMutation(getQuoteCompanionRequestMutationOptions(options));
     }
 

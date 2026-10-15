@@ -36,7 +36,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CompanionInput"
+              $ref: "#/components/schemas/ApprovedCompanionInput"
       responses:
         "200":
           description: Companion response
@@ -50,12 +50,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Spending is not approved or reliable pricing is unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "502":
           description: Grok service unavailable
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /musicvizion/quote:
+    post:
+      operationId: quoteCompanionRequest
+      tags: [musicvizion]
+      summary: Review a request without invoking paid AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanionInput"
+      responses:
+        "200":
+          description: Cost review, blocked when pricing or owner authorization is missing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanionQuote"
 components:
   schemas:
     HealthStatus:
@@ -78,6 +102,7 @@ components:
           type: ["number", "null"]
         source:
           type: string
+          maxLength: 160
       required: [source]
     CompanionInput:
       type: object
@@ -104,6 +129,37 @@ components:
             type: string
             maxLength: 120
       required: [title, artist, userMessage, positionSeconds, analysis, preferences]
+    ApprovedCompanionInput:
+      type: object
+      properties:
+        request:
+          $ref: "#/components/schemas/CompanionInput"
+        approvalToken:
+          type: string
+          minLength: 32
+          maxLength: 128
+        approvedMaximumUsd:
+          type: number
+          minimum: 0
+        approved:
+          type: boolean
+      required: [request, approvalToken, approvedMaximumUsd, approved]
+    CompanionQuote:
+      type: object
+      properties:
+        provider:
+          type: string
+        available:
+          type: boolean
+        estimatedMaximumUsd:
+          type: ["number", "null"]
+        approvalToken:
+          type: ["string", "null"]
+        expiresAt:
+          type: ["string", "null"]
+        reason:
+          type: string
+      required: [provider, available, estimatedMaximumUsd, approvalToken, expiresAt, reason]
     CompanionReply:
       type: object
       properties:

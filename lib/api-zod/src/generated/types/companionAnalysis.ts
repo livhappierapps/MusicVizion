@@ -15,5 +15,6 @@ export interface CompanionAnalysis {
   brightness?: number | null;
   /** @nullable */
   pulse?: number | null;
+  /** @maxLength 160 */
   source: string;
 }

@@ -6,8 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './approvedCompanionInput';
 export * from './companionAnalysis';
 export * from './companionInput';
+export * from './companionQuote';
 export * from './companionReply';
 export * from './errorResponse';
 export * from './healthStatus';

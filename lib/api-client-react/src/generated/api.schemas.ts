@@ -18,6 +18,7 @@ export interface CompanionAnalysis {
   brightness?: number | null;
   /** @nullable */
   pulse?: number | null;
+  /** @maxLength 160 */
   source: string;
 }
 
@@ -39,6 +40,30 @@ export interface CompanionInput {
      * @items.maxLength 120
      */
   preferences: string[];
+}
+
+export interface ApprovedCompanionInput {
+  request: CompanionInput;
+  /**
+     * @minLength 32
+     * @maxLength 128
+     */
+  approvalToken: string;
+  /** @minimum 0 */
+  approvedMaximumUsd: number;
+  approved: boolean;
+}
+
+export interface CompanionQuote {
+  provider: string;
+  available: boolean;
+  /** @nullable */
+  estimatedMaximumUsd: number | null;
+  /** @nullable */
+  approvalToken: string | null;
+  /** @nullable */
+  expiresAt: string | null;
+  reason: string;
 }
 
 export interface CompanionReply {

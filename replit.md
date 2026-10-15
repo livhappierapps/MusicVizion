@@ -1,15 +1,16 @@
-# [Project name]
+# MusicVizion
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Music sharing, appreciation, and live analysis with your AI companion. The current MVP is local-first; paid Grok is deliberately disabled.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- Use the managed MusicVizion and API Server workflows for previews; their ports and paths are injected.
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `node --experimental-strip-types --test artifacts/api-server/src/lib/spending-consent.test.ts artifacts/musicvizion/src/lib/local-first.test.ts` — local tests, no paid API
+- No database or new secret is required by the local-first MusicVizion features.
 
 ## Stack
 
@@ -22,23 +23,31 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- Frontend: `artifacts/musicvizion/src/App.tsx`; new cost/profile components are in `src/components/musicvizion/`.
+- API contract: `lib/api-spec/openapi.yaml`; server routes: `artifacts/api-server/src/routes/musicvizion.ts`.
+- Styles: `src/index.css`, `src/local-first.css`, and `src/components/musicvizion/cost-panels.css`.
+- Cost/release rationale: `docs/musicvizion-costs.md`.
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Paid inference transport is disconnected, not merely hidden in the UI. No owner spending authorization or verified price ceiling exists; never enable inference just because a connector is installed.
+- Request approval alone cannot prevent strangers from spending an app owner's money. Any future paid release must also authorize the payer, enforce owner budgets, verify a maximum provider charge, and prevent retry/replay.
+- Local files remain object URLs in the browser, never uploads. Public embeds cannot be analyzed through Web Audio; do not scrape their audio.
+- Device-local profiles are not accounts or independent sentient entities. Do not imply cloud backup or cross-device synchronization.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Local/direct-audio playback and rough live feature meters; official YouTube player and pause-to-discuss; Suno original-page fallback; a fixed free listening guide; separate editable companion notes; neon and pewter-metal themes; historical listening prompts, unavailable popularity status, and cost/release information.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+The binding project cost-authorization instruction is preserved in `.agents/memory/cost-policy.md`.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Model catalog checks through the connected xAI proxy returned HTTP 400 `invalid-argument` for both `/v1/models` and `/v1/language-models`. No inference was used to investigate; access remains unresolved.
+- SDK transport may automatically retry 401 responses. A future billable transport must not blindly retry inference.
+- Clearing browser storage loses local profiles. Conversations are in-tab only; audio selections are not restored after reload.
 
 ## Pointers
 

@@ -20,38 +20,94 @@ export const HealthCheckResponse = zod.object({
 /**
  * @summary Ask the Grok companion about the current listening session
  */
-export const createCompanionReplyBodyTitleMax = 160;
+export const createCompanionReplyBodyRequestTitleMax = 160;
 
-export const createCompanionReplyBodyArtistMax = 160;
+export const createCompanionReplyBodyRequestArtistMax = 160;
 
-export const createCompanionReplyBodyUserMessageMax = 1200;
+export const createCompanionReplyBodyRequestUserMessageMax = 1200;
 
-export const createCompanionReplyBodyPositionSecondsMin = 0;
+export const createCompanionReplyBodyRequestPositionSecondsMin = 0;
 
-export const createCompanionReplyBodyPreferencesItemMax = 120;
+export const createCompanionReplyBodyRequestAnalysisSourceMax = 160;
 
-export const createCompanionReplyBodyPreferencesMax = 24;
+export const createCompanionReplyBodyRequestPreferencesItemMax = 120;
+
+export const createCompanionReplyBodyRequestPreferencesMax = 24;
+
+export const createCompanionReplyBodyApprovalTokenMin = 32;
+export const createCompanionReplyBodyApprovalTokenMax = 128;
+
+export const createCompanionReplyBodyApprovedMaximumUsdMin = 0;
 
 
 
 export const CreateCompanionReplyBody = zod.object({
-  "title": zod.string().max(createCompanionReplyBodyTitleMax),
-  "artist": zod.string().max(createCompanionReplyBodyArtistMax),
-  "userMessage": zod.string().min(1).max(createCompanionReplyBodyUserMessageMax),
-  "positionSeconds": zod.number().min(createCompanionReplyBodyPositionSecondsMin),
+  "request": zod.object({
+  "title": zod.string().max(createCompanionReplyBodyRequestTitleMax),
+  "artist": zod.string().max(createCompanionReplyBodyRequestArtistMax),
+  "userMessage": zod.string().min(1).max(createCompanionReplyBodyRequestUserMessageMax),
+  "positionSeconds": zod.number().min(createCompanionReplyBodyRequestPositionSecondsMin),
   "analysis": zod.object({
   "bpm": zod.number().nullish(),
   "energy": zod.number().nullish(),
   "brightness": zod.number().nullish(),
   "pulse": zod.number().nullish(),
-  "source": zod.string()
+  "source": zod.string().max(createCompanionReplyBodyRequestAnalysisSourceMax)
 }),
-  "preferences": zod.array(zod.string().max(createCompanionReplyBodyPreferencesItemMax)).max(createCompanionReplyBodyPreferencesMax)
+  "preferences": zod.array(zod.string().max(createCompanionReplyBodyRequestPreferencesItemMax)).max(createCompanionReplyBodyRequestPreferencesMax)
+}),
+  "approvalToken": zod.string().min(createCompanionReplyBodyApprovalTokenMin).max(createCompanionReplyBodyApprovalTokenMax),
+  "approvedMaximumUsd": zod.number().min(createCompanionReplyBodyApprovedMaximumUsdMin),
+  "approved": zod.boolean()
 })
 
 export const CreateCompanionReplyResponse = zod.object({
   "reply": zod.string(),
   "preferenceSignal": zod.string().nullable()
+})
+
+
+/**
+ * @summary Review a request without invoking paid AI
+ */
+export const quoteCompanionRequestBodyTitleMax = 160;
+
+export const quoteCompanionRequestBodyArtistMax = 160;
+
+export const quoteCompanionRequestBodyUserMessageMax = 1200;
+
+export const quoteCompanionRequestBodyPositionSecondsMin = 0;
+
+export const quoteCompanionRequestBodyAnalysisSourceMax = 160;
+
+export const quoteCompanionRequestBodyPreferencesItemMax = 120;
+
+export const quoteCompanionRequestBodyPreferencesMax = 24;
+
+
+
+export const QuoteCompanionRequestBody = zod.object({
+  "title": zod.string().max(quoteCompanionRequestBodyTitleMax),
+  "artist": zod.string().max(quoteCompanionRequestBodyArtistMax),
+  "userMessage": zod.string().min(1).max(quoteCompanionRequestBodyUserMessageMax),
+  "positionSeconds": zod.number().min(quoteCompanionRequestBodyPositionSecondsMin),
+  "analysis": zod.object({
+  "bpm": zod.number().nullish(),
+  "energy": zod.number().nullish(),
+  "brightness": zod.number().nullish(),
+  "pulse": zod.number().nullish(),
+  "source": zod.string().max(quoteCompanionRequestBodyAnalysisSourceMax)
+}),
+  "preferences": zod.array(zod.string().max(quoteCompanionRequestBodyPreferencesItemMax)).max(quoteCompanionRequestBodyPreferencesMax)
+})
+
+export const QuoteCompanionRequestResponse = zod.object({
+  "provider": zod.string(),
+  "available": zod.boolean(),
+  "estimatedMaximumUsd": zod.number().nullable(),
+  "approvalToken": zod.string().nullable(),
+  "expiresAt": zod.string().nullable(),
+  "reason": zod.string()
 })
 
 
