@@ -51,10 +51,11 @@ export function CostReview({ input, onClose }: CostReviewProps) {
 
         {q && (
           <div className="mvc-status" role="status" data-testid="status-quote-result">
-            <strong>Blocked: {q.available ? 'maximum price unknown' : 'unavailable'}.</strong>{' '}
-            {q.estimatedMaximumUsd == null
-              ? 'The maximum price is unknown, and the owner has not authorized any spending, so this request cannot be approved.'
-              : `Estimated maximum: $${q.estimatedMaximumUsd.toFixed(2)}, but the owner has not authorized spending.`}
+            <strong>Paid Grok is off. Authorized maximum: $0 per request, $0 total.</strong>{' '}
+            No paid calls or live tests are authorized. This review shares computed listening features and text, not audio. Actual audio listening is not connected; Grok Voice has not been verified for musical analysis.
+            {q.estimatedMaximumUsd != null && (
+              <div style={{ marginTop: 6 }}>A quote is not a maximum charge: ${q.estimatedMaximumUsd.toFixed(2)} estimated.</div>
+            )}
             {q.reason ? <div data-testid="text-quote-reason" style={{ marginTop: 6 }}>Server note: {q.reason}</div> : null}
           </div>
         )}

@@ -45,7 +45,7 @@ The binding project cost-authorization instruction is preserved in `.agents/memo
 
 ## Gotchas
 
-- Model catalog checks through the connected xAI proxy returned HTTP 400 `invalid-argument` for both `/v1/models` and `/v1/language-models`. No inference was used to investigate; access remains unresolved.
+- The owner requested xAI credentials from Replit Secrets. Direct server-side catalog GETs now succeed with `XAI_API_KEY`; use that path for further metadata checks, never expose the key to browsers. The connector's separate saved key previously returned HTTP 400 `invalid-argument` (“Incorrect API key provided”) and was not corrected. Successful metadata access does not authorize inference or verify Voice API access.
 - SDK transport may automatically retry 401 responses. A future billable transport must not blindly retry inference.
 - Clearing browser storage loses local profiles. Conversations are in-tab only; audio selections are not restored after reload.
 

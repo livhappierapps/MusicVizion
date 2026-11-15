@@ -10,6 +10,8 @@ export * from './approvedCompanionInput';
 export * from './companionAnalysis';
 export * from './companionInput';
 export * from './companionQuote';
+export * from './companionQuoteRequestContent';
+export * from './companionQuoteSpendingStatus';
 export * from './companionReply';
 export * from './errorResponse';
 export * from './healthStatus';

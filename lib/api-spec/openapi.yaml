@@ -30,7 +30,8 @@ paths:
     post:
       operationId: createCompanionReply
       tags: [musicvizion]
-      summary: Ask the Grok companion about the current listening session
+      summary: Paid companion transport is disconnected under the owner's zero budget
+      description: Always refuses under the current policy, including approved-looking requests. No provider request or retry is made.
       requestBody:
         required: true
         content:
@@ -51,7 +52,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "403":
-          description: Spending is not approved or reliable pricing is unavailable
+          description: Owner budget is zero, approval is invalid, or reliable pricing is unavailable
           content:
             application/json:
               schema:
@@ -75,11 +76,17 @@ paths:
               $ref: "#/components/schemas/CompanionInput"
       responses:
         "200":
-          description: Cost review, blocked when pricing or owner authorization is missing
+          description: Local cost review with server-owned zero-dollar limits; no paid provider is contacted
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CompanionQuote"
+        "400":
+          description: Invalid or oversized listening context
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -159,7 +166,31 @@ components:
           type: ["string", "null"]
         reason:
           type: string
-      required: [provider, available, estimatedMaximumUsd, approvalToken, expiresAt, reason]
+        spendingStatus:
+          type: string
+          enum: [disabled_zero_budget]
+          description: The owner authorized no spending. A saved API key does not override this policy.
+        authorizedTotalBudgetUsd:
+          type: number
+          minimum: 0
+          maximum: 0
+        authorizedPerRequestMaximumUsd:
+          type: number
+          minimum: 0
+          maximum: 0
+        liveTestBudgetUsd:
+          type: number
+          minimum: 0
+          maximum: 0
+        requestContent:
+          type: string
+          enum: [text_features_only]
+          description: This review contains metadata, text, and computed features, not audio.
+        audioListeningAvailable:
+          type: boolean
+          enum: [false]
+          description: Actual audio listening is not connected or authorized.
+      required: [provider, available, estimatedMaximumUsd, approvalToken, expiresAt, reason, spendingStatus, authorizedTotalBudgetUsd, authorizedPerRequestMaximumUsd, liveTestBudgetUsd, requestContent, audioListeningAvailable]
     CompanionReply:
       type: object
       properties:
@@ -174,4 +205,3 @@ components:
         error:
           type: string
       required: [error]
-

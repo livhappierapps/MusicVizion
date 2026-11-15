@@ -54,6 +54,26 @@ export interface ApprovedCompanionInput {
   approved: boolean;
 }
 
+/**
+ * The owner authorized no spending. A saved API key does not override this policy.
+ */
+export type CompanionQuoteSpendingStatus = typeof CompanionQuoteSpendingStatus[keyof typeof CompanionQuoteSpendingStatus];
+
+
+export const CompanionQuoteSpendingStatus = {
+  disabled_zero_budget: 'disabled_zero_budget',
+} as const;
+
+/**
+ * This review contains metadata, text, and computed features, not audio.
+ */
+export type CompanionQuoteRequestContent = typeof CompanionQuoteRequestContent[keyof typeof CompanionQuoteRequestContent];
+
+
+export const CompanionQuoteRequestContent = {
+  text_features_only: 'text_features_only',
+} as const;
+
 export interface CompanionQuote {
   provider: string;
   available: boolean;
@@ -64,6 +84,27 @@ export interface CompanionQuote {
   /** @nullable */
   expiresAt: string | null;
   reason: string;
+  /** The owner authorized no spending. A saved API key does not override this policy. */
+  spendingStatus: CompanionQuoteSpendingStatus;
+  /**
+     * @minimum 0
+     * @maximum 0
+     */
+  authorizedTotalBudgetUsd: number;
+  /**
+     * @minimum 0
+     * @maximum 0
+     */
+  authorizedPerRequestMaximumUsd: number;
+  /**
+     * @minimum 0
+     * @maximum 0
+     */
+  liveTestBudgetUsd: number;
+  /** This review contains metadata, text, and computed features, not audio. */
+  requestContent: CompanionQuoteRequestContent;
+  /** Actual audio listening is not connected or authorized. */
+  audioListeningAvailable: false;
 }
 
 export interface CompanionReply {
@@ -75,4 +116,3 @@ export interface CompanionReply {
 export interface ErrorResponse {
   error: string;
 }
-

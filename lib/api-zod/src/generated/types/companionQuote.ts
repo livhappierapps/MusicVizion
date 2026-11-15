@@ -5,6 +5,8 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CompanionQuoteRequestContent } from './companionQuoteRequestContent';
+import type { CompanionQuoteSpendingStatus } from './companionQuoteSpendingStatus';
 
 export interface CompanionQuote {
   provider: string;
@@ -16,4 +18,25 @@ export interface CompanionQuote {
   /** @nullable */
   expiresAt: string | null;
   reason: string;
+  /** The owner authorized no spending. A saved API key does not override this policy. */
+  spendingStatus: CompanionQuoteSpendingStatus;
+  /**
+     * @minimum 0
+     * @maximum 0
+     */
+  authorizedTotalBudgetUsd: number;
+  /**
+     * @minimum 0
+     * @maximum 0
+     */
+  authorizedPerRequestMaximumUsd: number;
+  /**
+     * @minimum 0
+     * @maximum 0
+     */
+  liveTestBudgetUsd: number;
+  /** This review contains metadata, text, and computed features, not audio. */
+  requestContent: CompanionQuoteRequestContent;
+  /** Actual audio listening is not connected or authorized. */
+  audioListeningAvailable: false;
 }

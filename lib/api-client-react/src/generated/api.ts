@@ -142,7 +142,8 @@ export const getCreateCompanionReplyUrl = () => {
 }
 
 /**
- * @summary Ask the Grok companion about the current listening session
+ * Always refuses under the current policy, including approved-looking requests. No provider request or retry is made.
+ * @summary Paid companion transport is disconnected under the owner's zero budget
  */
 export const createCompanionReply = async (approvedCompanionInput: ApprovedCompanionInput, options?: Parameters<typeof customFetch>[1]): Promise<CompanionReply> => {
 
@@ -208,7 +209,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CreateCompanionReplyMutationVariables = {data: BodyType<ApprovedCompanionInput>}
 
     /**
- * @summary Ask the Grok companion about the current listening session
+ * @summary Paid companion transport is disconnected under the owner's zero budget
  */
 export const useCreateCompanionReply = <TError = ErrorType<ErrorResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCompanionReply>>, TError,CreateCompanionReplyMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -263,7 +264,7 @@ return customFetch<CompanionQuote>(getQuoteCompanionRequestUrl(),
 
 export const getQuoteCompanionRequestMutationKey = () => ['quoteCompanionRequest'] as const;
 
-export const getQuoteCompanionRequestMutationOptions = <TError = ErrorType<unknown>,
+export const getQuoteCompanionRequestMutationOptions = <TError = ErrorType<ErrorResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof quoteCompanionRequest>>, TError,QuoteCompanionRequestMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof quoteCompanionRequest>>, TError,QuoteCompanionRequestMutationVariables, TContext> => {
 
@@ -292,13 +293,13 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type QuoteCompanionRequestMutationResult = NonNullable<Awaited<ReturnType<typeof quoteCompanionRequest>>>
     export type QuoteCompanionRequestMutationBody = BodyType<CompanionInput>
-    export type QuoteCompanionRequestMutationError = ErrorType<unknown>
+    export type QuoteCompanionRequestMutationError = ErrorType<ErrorResponse>
     export type QuoteCompanionRequestMutationVariables = {data: BodyType<CompanionInput>}
 
     /**
  * @summary Review a request without invoking paid AI
  */
-export const useQuoteCompanionRequest = <TError = ErrorType<unknown>,
+export const useQuoteCompanionRequest = <TError = ErrorType<ErrorResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof quoteCompanionRequest>>, TError,QuoteCompanionRequestMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof quoteCompanionRequest>>,
@@ -308,4 +309,3 @@ export const useQuoteCompanionRequest = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getQuoteCompanionRequestMutationOptions(options));
     }
-
