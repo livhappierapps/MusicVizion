@@ -305,7 +305,7 @@ function Home() {
             <div>
               <h1>Hear the <em>in-between.</em></h1>
               <p className="lede">A track, a moment, a conversation that goes somewhere.</p>
-              <p className="zero-cost-banner" data-testid="text-spending-policy">Local-first · No paid AI calls · Grok spending blocked until separately approved</p>
+              <p className="zero-cost-banner" data-testid="text-spending-policy">Local-first · No paid AI calls · Grok budget $0 — paid listening off</p>
             </div>
             <div className="session-tag"><Disc3 size={15} /> SESSION 001</div>
           </div>
@@ -413,7 +413,7 @@ function Home() {
           </div>
           <div className="companion-intro">
             <div className="grok-avatar"><AudioWaveform size={21} /></div>
-            <div><strong>Let’s listen closely.</strong><p>The free guide uses fixed listening prompts, not AI. Grok requests are blocked until reliable pricing and owner spending approval exist.</p></div>
+            <div><strong>Let’s listen closely.</strong><p>The free guide uses fixed listening prompts, not AI. Your approved Grok budget is $0, so paid requests and tests are off. The review shares computed features, not audio; Grok Voice’s musical-analysis capability and maximum charge are unverified.</p></div>
           </div>
           <label className="mode-picker">Discussion mode<select value={mode} onChange={e => setMode(e.target.value as 'local'|'grok')} data-testid="select-discussion-mode"><option value="local">Free local guide · no external AI</option><option value="grok">Grok · review costs (currently blocked)</option></select></label>
           <div className="conversation" data-testid="list-conversation">

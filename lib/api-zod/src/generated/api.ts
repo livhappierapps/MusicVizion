@@ -18,7 +18,8 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
- * @summary Ask the Grok companion about the current listening session
+ * Always refuses under the current policy, including approved-looking requests. No provider request or retry is made.
+ * @summary Paid companion transport is disconnected under the owner's zero budget
  */
 export const createCompanionReplyBodyRequestTitleMax = 160;
 
@@ -101,13 +102,28 @@ export const QuoteCompanionRequestBody = zod.object({
   "preferences": zod.array(zod.string().max(quoteCompanionRequestBodyPreferencesItemMax)).max(quoteCompanionRequestBodyPreferencesMax)
 })
 
+export const quoteCompanionRequestResponseAuthorizedTotalBudgetUsdMin = 0;
+export const quoteCompanionRequestResponseAuthorizedTotalBudgetUsdMax = 0;
+
+export const quoteCompanionRequestResponseAuthorizedPerRequestMaximumUsdMin = 0;
+export const quoteCompanionRequestResponseAuthorizedPerRequestMaximumUsdMax = 0;
+
+export const quoteCompanionRequestResponseLiveTestBudgetUsdMin = 0;
+export const quoteCompanionRequestResponseLiveTestBudgetUsdMax = 0;
+
+
+
 export const QuoteCompanionRequestResponse = zod.object({
   "provider": zod.string(),
   "available": zod.boolean(),
   "estimatedMaximumUsd": zod.number().nullable(),
   "approvalToken": zod.string().nullable(),
   "expiresAt": zod.string().nullable(),
-  "reason": zod.string()
+  "reason": zod.string(),
+  "spendingStatus": zod.enum(['disabled_zero_budget']).describe('The owner authorized no spending. A saved API key does not override this policy.'),
+  "authorizedTotalBudgetUsd": zod.number().min(quoteCompanionRequestResponseAuthorizedTotalBudgetUsdMin).max(quoteCompanionRequestResponseAuthorizedTotalBudgetUsdMax),
+  "authorizedPerRequestMaximumUsd": zod.number().min(quoteCompanionRequestResponseAuthorizedPerRequestMaximumUsdMin).max(quoteCompanionRequestResponseAuthorizedPerRequestMaximumUsdMax),
+  "liveTestBudgetUsd": zod.number().min(quoteCompanionRequestResponseLiveTestBudgetUsdMin).max(quoteCompanionRequestResponseLiveTestBudgetUsdMax),
+  "requestContent": zod.enum(['text_features_only']).describe('This review contains metadata, text, and computed features, not audio.'),
+  "audioListeningAvailable": zod.literal(false).describe('Actual audio listening is not connected or authorized.')
 })
-
-
